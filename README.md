@@ -85,7 +85,7 @@ Studio owners often struggle to manage memberships manually and prevent expired 
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/your-username/memberpass.git
+git clone https://github.com/Sarathy013/nm-MemberPass.git
 cd memberpass
 ```
 
