@@ -3,7 +3,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useData } from '../context/DataContext';
 import {
   ArrowLeft, Download, QrCode, Calendar, CreditCard,
-  User, Phone, Mail, Shield, RefreshCw,
+  User, Phone, Mail, Shield,
 } from 'lucide-react';
 import QRCode from 'qrcode';
 
@@ -17,7 +17,7 @@ function StatusPill({ status }) {
 export default function MemberCardPage() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { getMemberById, getMembershipByMemberId, plans, assignMembership } = useData();
+  const { getMemberById, getMembershipByMemberId, plans } = useData();
   const canvasRef = useRef(null);
   const [qrDataUrl, setQrDataUrl] = useState('');
 
@@ -47,12 +47,12 @@ export default function MemberCardPage() {
   }
 
   const expiryDate = membership?.expiryDate ? new Date(membership.expiryDate) : null;
-  const today = new Date(); today.setHours(0,0,0,0);
-  const daysLeft = expiryDate ? Math.ceil((expiryDate - today) / (1000 * 60 * 60 * 24)) : null;
+  const now = Date.now();
+  const daysLeft = expiryDate ? Math.ceil((expiryDate.getTime() - now) / (1000 * 60 * 60 * 24)) : null;
   const resolvedStatus = (() => {
     if (!membership) return 'none';
     if (membership.status === 'suspended') return 'suspended';
-    if (membership.status === 'expired' || (expiryDate && expiryDate < today)) return 'expired';
+    if (membership.status === 'expired' || (expiryDate && expiryDate.getTime() < now)) return 'expired';
     return membership.status;
   })();
 
@@ -187,4 +187,3 @@ export default function MemberCardPage() {
     </div>
   );
 }
-

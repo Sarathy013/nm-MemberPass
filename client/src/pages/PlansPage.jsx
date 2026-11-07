@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { useData } from '../context/DataContext';
-import { useAuth } from '../context/AuthContext';
 import {
-  Plus, Edit2, ToggleLeft, ToggleRight, Trash2, Check, X, DollarSign, Clock, Zap,
+  Plus, Edit2, ToggleLeft, ToggleRight, Check, X, Zap,
 } from 'lucide-react';
 
 function PlanModal({ plan, onClose, onSave }) {

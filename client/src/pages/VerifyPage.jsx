@@ -3,7 +3,7 @@ import { useData } from '../context/DataContext';
 import { useAuth } from '../context/AuthContext';
 import {
   Camera, QrCode, CheckCircle, XCircle, AlertTriangle,
-  RefreshCw, User, Calendar, CreditCard, Info,
+  RefreshCw, Calendar, CreditCard, Info,
 } from 'lucide-react';
 
 // Demo QR tokens for manual testing
@@ -81,7 +81,6 @@ export default function VerifyPage() {
   const [result, setResult] = useState(null);
   const [scanning, setScanning] = useState(false);
   const [cameraError, setCameraError] = useState('');
-  const scannerRef = useRef(null);
   const html5QrRef = useRef(null);
 
   const doVerify = (token) => {
@@ -117,7 +116,7 @@ export default function VerifyPage() {
         (decodedText) => { doVerify(decodedText); },
         () => {}
       );
-    } catch (err) {
+    } catch {
       setCameraError('Camera unavailable or permission denied. Use the manual input below.');
       setScanning(false);
     }
@@ -240,4 +239,3 @@ export default function VerifyPage() {
     </div>
   );
 }
-

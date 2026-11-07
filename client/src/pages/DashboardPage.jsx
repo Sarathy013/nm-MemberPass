@@ -1,8 +1,9 @@
+import { useMemo } from 'react';
 import { useData } from '../context/DataContext';
 import { useAuth } from '../context/AuthContext';
 import {
   Users, UserCheck, UserX, AlertTriangle, TrendingUp,
-  QrCode, ArrowUpRight, Calendar, Clock,
+  QrCode, ArrowUpRight, Calendar,
 } from 'lucide-react';
 import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -35,10 +36,16 @@ function StatCard({ icon: Icon, label, value, sub, color, bgColor }) {
 export default function DashboardPage() {
   const { getStats, plans } = useData();
   const { user, isDemo } = useAuth();
-  const stats = getStats();
+  const stats = useMemo(() => getStats(), [getStats]);
+
+  const greeting = useMemo(() => {
+    const hours = new Date().getHours();
+    if (hours < 12) return 'morning';
+    if (hours < 18) return 'afternoon';
+    return 'evening';
+  }, []);
 
   const formatCurrency = (n) => `₹${n.toLocaleString('en-IN')}`;
-  const formatTime = (iso) => new Date(iso).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
   const formatDate = (iso) => new Date(iso).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
 
   return (
@@ -47,7 +54,7 @@ export default function DashboardPage() {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-black text-gray-900">
-            Good {new Date().getHours() < 12 ? 'morning' : new Date().getHours() < 18 ? 'afternoon' : 'evening'}, {user?.name?.split(' ')[0]} 👋
+            Good {greeting}, {user?.name?.split(' ')[0]} 👋
           </h2>
           <p className="text-gray-500 text-sm mt-1">Here's what's happening at your studio today.</p>
         </div>

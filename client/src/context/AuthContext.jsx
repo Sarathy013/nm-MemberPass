@@ -1,19 +1,19 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState } from 'react';
 import { DEMO_USERS } from '../data/demoData';
 
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const stored = localStorage.getItem('mp_user');
-    if (stored) {
-      try { setUser(JSON.parse(stored)); } catch { localStorage.removeItem('mp_user'); }
+  const [user, setUser] = useState(() => {
+    try {
+      const stored = localStorage.getItem('mp_user');
+      return stored ? JSON.parse(stored) : null;
+    } catch {
+      localStorage.removeItem('mp_user');
+      return null;
     }
-    setLoading(false);
-  }, []);
+  });
+  const [loading] = useState(false);
 
   const login = async (email, password) => {
     // Try backend first; fall back to demo data

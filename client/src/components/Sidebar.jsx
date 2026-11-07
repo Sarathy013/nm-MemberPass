@@ -2,7 +2,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import {
   LayoutDashboard, Users, CreditCard, QrCode, History,
-  LogOut, ChevronRight, Dumbbell, Shield, FileText,
+  LogOut, ChevronRight, Shield,
 } from 'lucide-react';
 
 const navItems = [

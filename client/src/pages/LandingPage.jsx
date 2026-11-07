@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import {
-  Shield, QrCode, Users, BarChart3, CheckCircle, ArrowRight,
-  Zap, Lock, Smartphone, ChevronRight, Dumbbell,
+  Shield, QrCode, Users, BarChart3, ArrowRight,
+  Zap, Lock, Smartphone, ChevronRight,
 } from 'lucide-react';
 
 const features = [

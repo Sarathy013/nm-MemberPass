@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 
 const connectDB = async () => {
+  if (!process.env.MONGODB_URI) {
+    console.warn('⚠️  MONGODB_URI is not set in environment. Running without database.');
+    return false;
+  }
   try {
     const conn = await mongoose.connect(process.env.MONGODB_URI, {
       serverSelectionTimeoutMS: 5000,
@@ -14,4 +18,3 @@ const connectDB = async () => {
 };
 
 module.exports = connectDB;
-

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useData } from '../context/DataContext';
-import { CheckCircle, XCircle, Search, Filter, Download, Clock } from 'lucide-react';
+import { CheckCircle, XCircle, Search, Filter, Clock } from 'lucide-react';
 
 export default function HistoryPage() {
   const { entryLogs } = useData();
@@ -133,4 +133,3 @@ export default function HistoryPage() {
     </div>
   );
 }
-

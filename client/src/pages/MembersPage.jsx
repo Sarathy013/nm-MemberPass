@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { useData } from '../context/DataContext';
 import { Link } from 'react-router-dom';
 import {
   UserPlus, Search, Edit2, Trash2, QrCode, Eye,
-  Filter, ChevronDown, X, Check,
+  Filter, X,
 } from 'lucide-react';
 import AddMemberModal from '../components/AddMemberModal';
 import AssignPlanModal from '../components/AssignPlanModal';
@@ -26,34 +26,39 @@ export default function MembersPage() {
   const [assignMember, setAssignMember] = useState(null);
   const [confirmDelete, setConfirmDelete] = useState(null);
 
-  const getMemberStatus = (memberId) => {
+  const getMemberStatus = useCallback((memberId) => {
     const ms = memberships
-      .filter(ms => ms.memberId === memberId && ms.status !== 'superseded')
+      .filter(m => m.memberId === memberId && m.status !== 'superseded')
       .sort((a, b) => new Date(b.startDate) - new Date(a.startDate))[0];
     if (!ms) return 'none';
-    const today = new Date(); today.setHours(0,0,0,0);
     if (ms.status === 'suspended') return 'suspended';
-    if (ms.status === 'expired' || new Date(ms.expiryDate) < today) return 'expired';
+    if (ms.status === 'expired') return 'expired';
+    const expiry = new Date(ms.expiryDate);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    if (expiry < today) return 'expired';
     if (ms.status === 'active') return 'active';
     return 'none';
-  };
+  }, [memberships]);
 
-  const getMembership = (memberId) => {
+  const getMembership = useCallback((memberId) => {
     return memberships
       .filter(ms => ms.memberId === memberId && ms.status !== 'superseded')
       .sort((a, b) => new Date(b.startDate) - new Date(a.startDate))[0];
-  };
+  }, [memberships]);
 
-  const getPlan = (planId) => plans.find(p => p.id === planId);
+  const getPlan = useCallback((planId) => plans.find(p => p.id === planId), [plans]);
 
-  const filtered = members.filter(m => {
-    const matchSearch = m.name.toLowerCase().includes(search.toLowerCase()) ||
-      m.email.toLowerCase().includes(search.toLowerCase()) ||
-      m.memberId.toLowerCase().includes(search.toLowerCase());
-    const status = getMemberStatus(m.id);
-    const matchStatus = statusFilter === 'all' || status === statusFilter;
-    return matchSearch && matchStatus;
-  });
+  const filtered = useMemo(() => {
+    return members.filter(m => {
+      const matchSearch = m.name.toLowerCase().includes(search.toLowerCase()) ||
+        m.email.toLowerCase().includes(search.toLowerCase()) ||
+        m.memberId.toLowerCase().includes(search.toLowerCase());
+      const status = getMemberStatus(m.id);
+      const matchStatus = statusFilter === 'all' || status === statusFilter;
+      return matchSearch && matchStatus;
+    });
+  }, [members, search, statusFilter, getMemberStatus]);
 
   const handleDelete = (id) => {
     deleteMember(id);
@@ -161,6 +166,13 @@ export default function MembersPage() {
                           <Eye size={15} />
                         </Link>
                         <button
+                          onClick={() => setEditMember(member)}
+                          title="Edit Member"
+                          className="p-1.5 rounded-lg text-gray-400 hover:text-blue-600 hover:bg-blue-50 transition"
+                        >
+                          <Edit2 size={15} />
+                        </button>
+                        <button
                           onClick={() => setConfirmDelete(member.id)}
                           title="Delete"
                           className="p-1.5 rounded-lg text-gray-400 hover:text-red-600 hover:bg-red-50 transition"
@@ -179,6 +191,12 @@ export default function MembersPage() {
 
       {/* Modals */}
       {showAdd && <AddMemberModal onClose={() => setShowAdd(false)} />}
+      {editMember && (
+        <AddMemberModal
+          initialData={editMember}
+          onClose={() => setEditMember(null)}
+        />
+      )}
       {assignMember && <AssignPlanModal member={assignMember} onClose={() => setAssignMember(null)} />}
 
       {/* Delete confirm */}

@@ -1,4 +1,4 @@
-import { Menu, Bell, Search } from 'lucide-react';
+import { Menu, Bell } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 export default function Topbar({ onMenuClick, title }) {
