@@ -1,0 +1,13 @@
+{
+  "name": "memberpass",
+  "version": "1.0.0",
+  "description": "MemberPass — Smart Studio Membership & Access Verification System",
+  "private": true,
+  "scripts": {
+    "dev:client": "npm run dev --prefix client",
+    "dev:server": "npm run dev --prefix server",
+    "build": "npm run build --prefix client",
+    "install:all": "npm install --prefix client && npm install --prefix server"
+  }
+}
+
